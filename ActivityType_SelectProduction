@@ -1,0 +1,42 @@
+USE [ThePlanPartner]
+/****** Object:  StoredProcedure [dbo].[ActivityType_SelectProduction] ******/
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC [dbo].[ActivityType_SelectProduction]
+
+AS
+
+/*
+
+Code only displays active rows (not "Inactive") 
+  that are used in the Activity Tracker, or are a source of leads, or are in category 2 ("money making")
+
+EXEC ActivityType_SelectProduction
+
+*/
+
+SELECT 
+  Id, 
+  Code, 
+  Name, 
+  CategoryId, 
+  Color, 
+  DisplayOrder, 
+  InactiveActivityTracker, 
+  LeadSource, 
+  Inactive, 
+  DateCreated, 
+  DateModified
+FROM ActivityType
+WHERE
+  Inactive = 0 AND 
+  (
+    InactiveActivityTracker = 1
+    OR
+    LeadSource = 1 
+    OR
+    CategoryId = 2
+  )
+ORDER BY Inactive, CategoryId, InactiveActivityTracker DESC, LeadSource DESC, DisplayOrder, Name
+
